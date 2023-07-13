@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>hBrowser</title>
+</head>
+<body>
+	<div class="toolbar">
+		<input type="text" name="url-input" id="url-input">
+		<img src="assets/icons/go.png" onclick="go()">
+		<img src="assets/icons/refresh.png" onclick="refresh()">
+	</div>
+	<iframe class="webpage" id="webpage" src="https://jcionx.tech/" frameborder="0"></iframe>
+	<script>
+		let iframe = document.getElementById('webpage');
+
+		function go() {
+			iframe.src = document.getElementById('url-input').value;
+		}
+
+		function installApp(id, title, icon, url) {
+			parent.openApp("sys.hos.appcenter", "App Center", "assets/apps/app-center/assets/icons/icon.png", "assets/apps/app-center/index.html", {id: id, title: title, icon: icon, url: url});
+		}
+
+		function refresh() {
+			iframe.src = iframe.src;
+		}
+	</script>
+</body>
+<style type="text/css">
+	body {
+		margin: 0;
+		overflow: hidden;
+		background-color: white;
+	}
+
+	.toolbar input {
+		margin-left: 10px;
+		background-color: white;
+		outline: none;
+		border: none;
+		border-radius: 100px;
+		height: 6vh;
+		padding: 0 5px 0 5px;
+		color: black;
+		transition: 0.1s;
+	}
+
+	.toolbar input:focus {
+		background-color: black;
+		color: white;
+	}
+
+	.toolbar img {
+		background-color: white;
+		border-radius: 100px;
+		padding: 1vh;
+		height: 4vh;
+	}
+
+	.webpage {
+		width: 100%;
+		height: 90vh;
+	}
+
+	.toolbar {
+		background-color: lightgray;
+		width: 100%;
+		height: 10vh;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	.toolbar * {
+		margin: 2px;
+		padding: 5px;
+	}
+</style>
+</html>

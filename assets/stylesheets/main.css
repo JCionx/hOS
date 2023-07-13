@@ -1,0 +1,204 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url("../fonts/Roboto-Regular.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url("../fonts/Roboto-Italic.ttf") format('truetype');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url("../fonts/Roboto-Bold.ttf") format('truetype');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url("../fonts/Roboto-BoldItalic.ttf") format('truetype');
+	font-weight: bold;
+	font-style: italic;
+}
+
+body {
+	margin: 0;
+	overflow: hidden;
+	-webkit-user-select: none; /* Safari */
+  	-ms-user-select: none; /* IE 10 and IE 11 */
+  	user-select: none; /* Standard syntax */
+  	font-family: 'Roboto', sans-serif;
+  	background-color: white;
+}
+
+.app {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 91%;
+}
+
+.navigation-bar {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.2);
+	justify-content: space-evenly;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 99999999;
+}
+
+.navigation-bar img {
+	height: 5vh;
+	padding: 2vh;
+}
+
+#null {
+	display: none;
+}
+
+.recent-apps {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+
+.recent-app {
+	background-color: white;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 42%;
+	padding: 2%;
+	margin: 2%;
+	border-radius: 20px;
+	color: black;
+	transition: 0.1s;
+}
+
+.recent-app img {
+	width: 24px;
+}
+
+.recent-app span {
+	margin-left: 10px;
+	font-size: large;
+}
+
+.recent-app:hover {
+	background-color: black;
+	color: white;
+}
+
+.recent-app:hover #close-app-icon {
+	filter: invert(100%);
+}
+
+.installed-apps {
+	background-color: orangered;
+}
+
+.installed-app {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+}
+
+.installed-app img {
+	width: 40px;
+}
+
+.installed-app span {
+	margin-left: 10px;
+	font-size: large;
+}
+
+#app, #installed-app, #recent-app {
+	display: none;
+}
+
+.control-panel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: lightgray;
+	z-index: 999;
+	width: 100%;
+	height: 100vh;
+	display: none;
+}
+
+.control-panel-entry {
+	background-color: white;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	width: 42%;
+	padding: 2%;
+	margin: 2%;
+	border-radius: 20px;
+	color: black;
+	transition: 0.1s;
+}
+
+.control-panel-entry span {
+	margin-left: 8px;
+}
+
+.control-panel-entry:hover {
+	color: white;
+	background-color: black;
+}
+
+.control-panel-entry img {
+	transition: 0.1s;
+	width: 48px;
+}
+
+.control-panel-entry:hover img {
+	filter: invert(100%);
+}
+
+.control-panel-toggles {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+
+.toast {
+	background-color: transparent;
+	color: white;
+	width: 100%;
+	height: 30px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	bottom: 60px;
+	z-index: 999999999999;
+}
+
+.toast-box {
+	background-color: rgba(0, 0, 0, 0.6);
+	padding: 5px 10px 5px 10px;
+	border-radius: 50px;
+}
+
+#toast {
+	display: none;
+}

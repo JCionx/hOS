@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Camera App</title>
+</head>
+<body>
+    <video class="camera-preview" id="camera-preview" autoplay></video>
+    <div class="toolbar">
+        <img id="switch-button" src="assets/icons/switch-camera.png"></img>
+        <img id="capture-button" src="assets/icons/capture.png"></img>
+        <img id="record-button" src="assets/icons/record.png"></img>
+    </div>
+    
+    <p id="timer"></p>
+
+    <script>
+        var videoStream;
+        var currentCamera = 'environment';
+        var mediaRecorder;
+        var chunks = [];
+        var isRecording = false;
+        var startTime;
+        var timerInterval;
+
+        function startCamera() {
+            var videoElement = document.getElementById('camera-preview');
+
+            // Stop the current stream if it exists
+            if (videoStream) {
+                videoStream.getTracks().forEach(function (track) {
+                    track.stop();
+                });
+            }
+
+            // Get access to the camera
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: currentCamera } })
+                .then(function (stream) {
+                    videoStream = stream;
+                    videoElement.srcObject = stream;
+                })
+                .catch(function (error) {
+                    console.error('Error accessing the camera:', error);
+                });
+        }
+
+        // Capture button click event handler
+        var captureButton = document.getElementById('capture-button');
+        captureButton.addEventListener('click', function () {
+            if (!isRecording) {
+                var videoElement = document.getElementById('camera-preview');
+                var canvas = document.createElement('canvas');
+                canvas.width = videoElement.videoWidth;
+                canvas.height = videoElement.videoHeight;
+                var context = canvas.getContext('2d');
+                context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+                // Convert the canvas image to a data URL (PNG format)
+                var dataUrl = canvas.toDataURL('image/png');
+
+                // Generate the filename with datetime
+                var datetime = new Date().toISOString().replace(/:/g, '-');
+                var filename = 'photo_' + datetime + '.png';
+
+                // Create a temporary link element to download the image
+                var link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = filename;
+                link.click();
+                parent.toast("Image downloaded");
+            }
+        });
+
+        // Switch button click event handler
+        var switchButton = document.getElementById('switch-button');
+        switchButton.addEventListener('click', function () {
+            if (currentCamera === 'environment') {
+                currentCamera = 'user';
+            } else {
+                currentCamera = 'environment';
+            }
+
+            startCamera();
+        });
+
+        // Record button click event handler
+        var recordButton = document.getElementById('record-button');
+        recordButton.addEventListener('click', function () {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+
+        function startRecording() {
+            var videoElement = document.getElementById('camera-preview');
+
+            // Check if MediaRecorder is supported
+            if (typeof MediaRecorder === 'undefined') {
+                alert('MediaRecorder is not supported in your browser.');
+                return;
+            }
+
+            // Start the recording
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: currentCamera }, audio: true })
+                .then(function (stream) {
+                    mediaRecorder = new MediaRecorder(stream);
+
+                    mediaRecorder.addEventListener('dataavailable', function (event) {
+                        chunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener('stop', function () {
+                        var blob = new Blob(chunks, { type: 'video/mp4' });
+
+                        // Generate the filename with datetime
+                        var datetime = new Date().toISOString().replace(/:/g, '-');
+                        var filename = 'record_' + datetime + '.mp4';
+
+                        // Create a temporary link element to download the recording
+                        var link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = filename;
+                        link.click();
+                        parent.toast("Video downloaded");
+
+                        chunks = [];
+                    });
+
+                    startTime = new Date().getTime();
+                    timerInterval = setInterval(updateTimer, 1000);
+                    isRecording = true;
+                    recordButton.src = 'assets/icons/stop-recording.png';
+
+                    mediaRecorder.start();
+                })
+                .catch(function (error) {
+                    console.error('Error accessing the camera and microphone:', error);
+                });
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                clearInterval(timerInterval);
+                isRecording = false;
+                recordButton.src = 'assets/icons/record.png';
+            }
+        }
+
+        function updateTimer() {
+            var currentTime = new Date().getTime();
+            var elapsedTime = Math.floor((currentTime - startTime) / 1000);
+            var minutes = Math.floor(elapsedTime / 60);
+            var seconds = elapsedTime % 60;
+            var timerElement = document.getElementById('timer');
+            timerElement.textContent = 'Recording: ' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+        }
+
+        parent.document.getElementById("navigation-bar-back").addEventListener("click", function() {
+            parent.closeApp();
+        })
+        
+        // Start the camera when the page loads
+        startCamera();
+    </script>
+</body>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background-color: white;
+    }
+    
+    .camera-preview {
+        height: 100vh;
+        width: 100vw;
+        object-fit: cover;
+    }
+    
+    .toolbar {
+        display: flex;
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        width: 100%;
+        justify-content: space-evenly;
+    }
+    
+    .toolbar img {
+        border-radius: 70px;
+        background-color: white;
+        padding: 5px;
+    }
+</style>
+</html>
