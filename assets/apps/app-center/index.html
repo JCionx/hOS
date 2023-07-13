@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>App Center</title>
+</head>
+<body>
+	<div class="app">
+		<img id="app-icon" src="">
+		<div class="text">
+			<h1 id="app-title"></h1>
+			<span id="app-id"></span>
+			<button id="install-btn" onclick="">Install</button>
+		</div>
+	</div>
+	<script>
+		let params = new URLSearchParams(window.location.search);
+		let icon = params.get('icon');
+		let title = params.get('title');
+		let id = params.get('id');
+		let url = params.get('url');
+		document.getElementById("app-icon").src = icon;
+		document.getElementById("app-title").innerHTML = title;
+		document.getElementById("app-id").innerHTML = id;
+		document.getElementById("install-btn").addEventListener("click", function() {
+			parent.installApp(id, title, icon, url);
+			parent.closeApp();
+		})
+
+		parent.document.getElementById("navigation-bar-back").addEventListener("click", function() {
+            parent.closeApp();
+        })
+	</script>
+</body>
+<style>
+	body {
+		margin: 0px;
+		background-color: white;
+	}
+
+	img {
+		width: 100px;
+	}
+
+	.app {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: flex-start;
+		margin: 10px;
+	}
+
+	.text {
+		margin-left: 20px;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+
+	h1 {
+		margin: 0;
+	}
+
+	span {
+		margin: 0 0 10px 0;
+	}
+
+	button {
+		color: green;
+		background-color: lightgreen;
+		width: 100px;
+		height: 30px;
+		outline: none;
+		border: solid 2px green;
+		border-radius: 20px;
+		transition: 0.1s;
+	}
+
+	button:hover {
+		color: lightgreen;
+		background-color: green;
+	}
+</style>
+</html>
