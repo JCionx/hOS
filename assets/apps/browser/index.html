@@ -20,7 +20,10 @@
 		}
 
 		function installApp(id, title, icon, url) {
-			parent.openApp("sys.hos.appcenter", "App Center", "assets/apps/app-center/assets/icons/icon.png", "assets/apps/app-center/index.html", {id: id, title: title, icon: icon, url: url});
+			parent.minimizeApp()
+			setTimeout(() => {
+				parent.openApp("sys.hos.appcenter", "App Center", "assets/apps/app-center/assets/icons/icon.png", "assets/apps/app-center/index.html", {id: id, title: title, icon: icon, url: url});
+			}, 300);
 		}
 
 		function refresh() {
