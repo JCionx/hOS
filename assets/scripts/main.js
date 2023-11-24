@@ -50,6 +50,10 @@ function openApp(app_id, app_title, app_icon, app_url, app_arg) {
 		// show app
 		current_app = app_id;
 		document.getElementById(app_id + "_app").style.display = "block";
+		document.getElementById(current_app + "_app").classList.add("openAppAnimation");
+		setTimeout(() => {
+			document.getElementById(current_app + "_app").classList.remove("openAppAnimation");
+		}, 300);
 	} else {
 		// start app
 		open_apps.push(app_id);
@@ -72,19 +76,24 @@ function openApp(app_id, app_title, app_icon, app_url, app_arg) {
 		document.body.appendChild(cloned_app);
 		addToRecents(app_id, app_title, app_icon, app_url);
 		cloned_app.classList.add("openAppAnimation");
+		setTimeout(() => {
+			cloned_app.classList.remove("openAppAnimation");
+		}, 300);
 	}
 }
 
 function minimizeApp() {
-	closePanel();
+	if (controlPanelOpen) {
+		closePanel();
+	}
 	if (current_app == "") {
 		console.log("No app is open");
 	} else {
-		document.getElementById(current_app + "_app").style.display = "none";
-		current_app = "";
-		current_app.classList.add("closeAppAnimation");
+		document.getElementById(current_app + "_app").classList.add("closeAppAnimation");
 		setTimeout(() => {
-			current_app.classList.remove("closeAppAnimation");
+			document.getElementById(current_app + "_app").classList.remove("closeAppAnimation");
+			document.getElementById(current_app + "_app").style.display = "none";
+			current_app = "";
 		}, 300);
 	}
 }
@@ -229,3 +238,10 @@ function updateTime() {
 updateTime();
 
 setInterval(updateTime, 1000);
+
+// disable android context menu
+window.oncontextmenu = function(event) {
+	event.preventDefault();
+	event.stopPropagation();
+	return false;
+};
