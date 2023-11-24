@@ -33,7 +33,7 @@ body {
   	-ms-user-select: none; /* IE 10 and IE 11 */
   	user-select: none; /* Standard syntax */
   	font-family: 'Roboto', sans-serif;
-  	background-image: url("/assets/icons/wallpaper.png");
+  	background-image: url("../icons/wallpaper.png");
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: top right;
@@ -42,7 +42,7 @@ body {
 
 body::backdrop {
 	background-color: white;
-	background-image: url("/assets/icons/wallpaper.png");
+	background-image: url("../icons/wallpaper.png");
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: top right;
