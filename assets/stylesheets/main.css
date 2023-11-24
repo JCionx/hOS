@@ -33,7 +33,19 @@ body {
   	-ms-user-select: none; /* IE 10 and IE 11 */
   	user-select: none; /* Standard syntax */
   	font-family: 'Roboto', sans-serif;
-  	background-color: white;
+  	background-image: url("/assets/icons/wallpaper.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top right;
+	height: 100vh;
+}
+
+body::backdrop {
+	background-color: white;
+	background-image: url("/assets/icons/wallpaper.png");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: top right;
 }
 
 .app {
@@ -48,7 +60,7 @@ body {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgb(0, 0, 0);
 	justify-content: space-evenly;
 	position: absolute;
 	bottom: 0;
@@ -57,8 +69,13 @@ body {
 }
 
 .navigation-bar img {
-	height: 5vh;
+	height: 3vh;
 	padding: 2vh;
+	transition: 0.1s;
+}
+
+.navigation-bar img:active {
+	transform: scale(1.3);
 }
 
 #null {
@@ -105,28 +122,80 @@ body {
 }
 
 .installed-apps {
-	background-color: orangered;
+	display: grid;
+	/* Hey! I just made this a grid. How can I make it fill the row first, and have exactly 4 elements per row? */
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr;
+	grid-auto-flow: row;
+	grid-auto-rows: 1fr;
+	grid-auto-columns: 1fr;
 }
 
 .installed-app {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
 	padding: 10px;
 }
 
 .installed-app img {
-	width: 40px;
+	width: 50px;
+	border-radius: 10px;
 }
 
 .installed-app span {
 	margin-left: 10px;
-	font-size: large;
+	font-size: 15px;
+	text-align: center;
+	margin: 0;
+	color: white;
+	text-shadow: 2px 2px 4px #00000059;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin-top: 4px;
+	width: 70px
 }
 
 #app, #installed-app, #recent-app {
 	display: none;
+}
+
+@keyframes openMenu {
+	0%   {left: 100%;}
+	100% {left: 0;}
+}
+
+@keyframes closeMenu {
+	0%   {left: 0;}
+	100% {left: 100%;}
+}
+
+@keyframes openApp {
+	0%   {
+		top: 130%;
+		transform: scale(0.4);
+		border-radius: 200px;
+	}
+	100% {
+		top: 0;
+		transform: scale(1);
+		border-radius: 0;
+	}
+}
+
+@keyframes closeApp {
+	0%   {
+		top: 0;
+		transform: scale(1);
+		border-radius: 0;
+	}
+	100% {
+		top: 130%;
+		transform: scale(0.4);
+		border-radius: 200px;
+	}
 }
 
 .control-panel {
@@ -137,7 +206,32 @@ body {
 	z-index: 999;
 	width: 100%;
 	height: 100vh;
+	padding: 15px;
 	display: none;
+}
+
+.openMenuAnimation {
+	animation-name: openMenu;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+}
+
+.closeMenuAnimation {
+	animation-name: closeMenu;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+}
+
+.openAppAnimation {
+	animation-name: openApp;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+}
+
+.closeAppAnimation {
+	animation-name: closeApp;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
 }
 
 .control-panel-entry {
@@ -146,19 +240,19 @@ body {
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
-	width: 42%;
+	width: calc(42% - 15px);
 	padding: 2%;
 	margin: 2%;
 	border-radius: 20px;
 	color: black;
-	transition: 0.1s;
+	transition: 0.2s;
 }
 
 .control-panel-entry span {
 	margin-left: 8px;
 }
 
-.control-panel-entry:hover {
+.control-panel-entry:active {
 	color: white;
 	background-color: black;
 }
@@ -202,3 +296,10 @@ body {
 #toast {
 	display: none;
 }
+
+.clock-widget {
+	color: white;
+	font-size: 50px;
+	margin: 35px;
+}
+

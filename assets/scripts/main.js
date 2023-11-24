@@ -9,6 +9,8 @@ let installed_apps_title_tmp = []
 let installed_apps_icon_tmp = []
 let installed_apps_url_tmp = []
 
+let controlPanelOpen = false;
+
 if (localStorage.getItem("installed_id") == '' || localStorage.getItem("installed_id") == null) {
 	installed_apps_tmp = [];
 } else {
@@ -69,6 +71,7 @@ function openApp(app_id, app_title, app_icon, app_url, app_arg) {
 		cloned_app.setAttribute("src", url);
 		document.body.appendChild(cloned_app);
 		addToRecents(app_id, app_title, app_icon, app_url);
+		cloned_app.classList.add("openAppAnimation");
 	}
 }
 
@@ -79,6 +82,10 @@ function minimizeApp() {
 	} else {
 		document.getElementById(current_app + "_app").style.display = "none";
 		current_app = "";
+		current_app.classList.add("closeAppAnimation");
+		setTimeout(() => {
+			current_app.classList.remove("closeAppAnimation");
+		}, 300);
 	}
 }
 
@@ -147,13 +154,9 @@ function installApp(app_id, app_title, app_icon, app_url, refresh) {
 		let default_install = document.getElementById("installed-app");
 		let cloned_install = default_install.cloneNode(true);
 		cloned_install.setAttribute("id", app_id + "_install");
-		cloned_install.querySelector("#installed-open-area").setAttribute("onclick", 'openApp(\'' + app_id + '\', \'' + app_title + '\', \'' + app_icon + '\', \'' + app_url + '\', \'\')');
+		cloned_install.setAttribute("onclick", 'openApp(\'' + app_id + '\', \'' + app_title + '\', \'' + app_icon + '\', \'' + app_url + '\', \'\')');
 		cloned_install.querySelector("#installed-app-icon").setAttribute("src", app_icon);
 		cloned_install.querySelector("#installed-app-text").innerHTML = app_title;
-		cloned_install.querySelector("#uninstall-app-icon").setAttribute("onclick", "uninstallApp(\'" + app_id + "'\)");
-		if (app_id.startsWith("sys.")) {
-			cloned_install.querySelector("#uninstall-app-icon").remove();
-		}
 		document.getElementById("installed-apps").appendChild(cloned_install);
 	}
 }
@@ -175,14 +178,24 @@ function uninstallApp(app_id) {
 
 function openPanel() {
 	document.getElementById("control-panel").style.display = "block";
+	document.getElementById("control-panel").classList.add("openMenuAnimation");
+	setTimeout(() => {
+		document.getElementById("control-panel").classList.remove("openMenuAnimation");
+		controlPanelOpen = true;
+	}, 300)
 }
 
 function closePanel() {
-	document.getElementById("control-panel").style.display = "none";
+	document.getElementById("control-panel").classList.add("closeMenuAnimation");
+	setTimeout(() => {
+		document.getElementById("control-panel").style.display = "none";
+		document.getElementById("control-panel").classList.remove("closeMenuAnimation");
+		controlPanelOpen = false;
+	}, 300)
 }
 
 function togglePanel() {
-	if (document.getElementById("control-panel").style.display == "block") {
+	if (controlPanelOpen) {
 		closePanel();
 	} else {
 		openPanel();
@@ -200,3 +213,19 @@ function toast(text, duration) {
 		document.getElementById("toast").style.display = "none";
 	}, toast_duration)
 }
+function updateTime() {
+	let date = new Date();
+	let hours = date.getHours();
+	let minutes = date.getMinutes();
+	if (hours < 10) {
+		hours = "0" + hours.toString();
+	}
+	if (minutes < 10) {
+		minutes = "0" + minutes.toString();
+	}
+	document.getElementById("clock-widget-time").innerHTML = hours + ":" + minutes;
+}
+
+updateTime();
+
+setInterval(updateTime, 1000);
