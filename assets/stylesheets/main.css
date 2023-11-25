@@ -119,7 +119,7 @@ body::backdrop {
 	color: white;
 }
 
-.recent-app:hover #close-app-icon {
+.recent-app:active #close-app-icon {
 	filter: invert(100%);
 }
 

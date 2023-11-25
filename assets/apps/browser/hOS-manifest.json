@@ -1,0 +1,13 @@
+{
+    "app_name": "OuterTune",
+    "app_id": "com.jcionx.outertune",
+    "app_author": "JCionx",
+    "app_icon": "https://jcionx.github.io/OuterTune/icon-192.png",
+    "app_url": "https://jcionx.github.io/OuterTune/index.html",
+    "screenshots": [
+        "https://jcionx.github.io/OuterTune/screenshot-1.png",
+        "https://jcionx.github.io/OuterTune/screenshot-2.png",
+        "https://jcionx.github.io/OuterTune/screenshot-3.png",
+        "https://jcionx.github.io/OuterTune/screenshot-4.png"
+    ]
+}

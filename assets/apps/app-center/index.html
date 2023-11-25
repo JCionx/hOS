@@ -14,15 +14,38 @@
 			<button id="install-btn" onclick="">Install</button>
 		</div>
 	</div>
+	<div class="screenshots">
+			
+	</div>
 	<script>
 		let params = new URLSearchParams(window.location.search);
 		let icon = params.get('icon');
 		let title = params.get('title');
 		let id = params.get('id');
 		let url = params.get('url');
+		let author = params.get('author');
+		let screenshots = params.get('screenshots');
+		let screenshotsList = screenshots.split(",");
+		console.log(screenshotsList);
+		
+		if (parent.checkAppInstalled(id)) {
+			document.getElementById("install-btn").innerHTML = "Open";
+			document.getElementById("install-btn").addEventListener("click", function() {
+				parent.openApp(id, title, icon, url);
+				parent.closeApp();
+			})
+		}
+
+		let screenshotsDiv = document.querySelector('.screenshots');
+		for (let screenshot of screenshotsList) {
+		    let img = document.createElement('img');
+		    img.src = screenshot;
+		    screenshotsDiv.appendChild(img);
+		}
+		
 		document.getElementById("app-icon").src = icon;
 		document.getElementById("app-title").innerHTML = title;
-		document.getElementById("app-id").innerHTML = id;
+		document.getElementById("app-id").innerHTML = author + ' | ' + id;
 		document.getElementById("install-btn").addEventListener("click", function() {
 			parent.installApp(id, title, icon, url);
 			parent.closeApp();
@@ -34,9 +57,38 @@
 	</script>
 </body>
 <style>
+	@font-face {
+		font-family: 'Roboto';
+		src: url("../../fonts/Roboto-Regular.ttf") format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src: url("../../fonts/Roboto-Italic.ttf") format('truetype');
+		font-weight: normal;
+		font-style: italic;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src: url("../../fonts/Roboto-Bold.ttf") format('truetype');
+		font-weight: bold;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src: url("../../fonts/Roboto-BoldItalic.ttf") format('truetype');
+		font-weight: bold;
+		font-style: italic;
+	}
+
 	body {
 		margin: 0px;
 		background-color: white;
+		font-family: 'Roboto';
 	}
 
 	img {
@@ -48,7 +100,7 @@
 		flex-direction: row;
 		justify-content: flex-start;
 		align-items: flex-start;
-		margin: 10px;
+		margin: 20px;
 	}
 
 	.text {
@@ -67,19 +119,33 @@
 	}
 
 	button {
-		color: green;
-		background-color: lightgreen;
+		color: white;
+		background-color: rgb(32, 65, 173);
 		width: 100px;
 		height: 30px;
 		outline: none;
-		border: solid 2px green;
+		border: none;
 		border-radius: 20px;
-		transition: 0.1s;
+		transition: 0.3s;
 	}
 
-	button:hover {
-		color: lightgreen;
-		background-color: green;
+	button:active {
+		background-color: rgb(87, 105, 165);
+	}
+
+	.screenshots {
+		margin: 20px;
+		overflow: auto;
+  		white-space: nowrap;
+	}
+
+	.screenshots img {
+		width: 360px;
+		height: 640px;
+		object-fit: cover;
+		object-position: center center;
+		margin: 5px;
+		border-radius: 15px;
 	}
 </style>
 </html>

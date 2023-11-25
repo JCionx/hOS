@@ -111,10 +111,15 @@ function minimizeApp() {
 function closeApp(app_id) {
 	if (app_id == null) {
 		if (open_apps.includes(current_app)) {
-			document.getElementById(current_app + "_app").remove();
-			open_apps.splice(open_apps.indexOf(current_app + "_app"), 1);
-			removeFromRecents(current_app);
-			current_app = "";
+			document.getElementById(current_app + "_app").classList.add("closeAppAnimation");
+			setTimeout(() => {
+				document.getElementById(current_app + "_app").classList.remove("closeAppAnimation");
+				document.getElementById(current_app + "_app").style.display = "none";
+				document.getElementById(current_app + "_app").remove();
+				open_apps.splice(open_apps.indexOf(current_app + "_app"), 1);
+				removeFromRecents(current_app);
+				current_app = "";
+			}, 300);
 		} else {
 			console.log("Cannot close app because app is not open");
 		}
@@ -243,6 +248,14 @@ function updateTime() {
 		minutes = "0" + minutes.toString();
 	}
 	document.getElementById("clock-widget-time").innerHTML = hours + ":" + minutes;
+}
+
+function checkAppInstalled(app_id) {
+	if (installed_apps.includes(app_id)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 updateTime();

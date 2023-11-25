@@ -19,11 +19,23 @@
 			iframe.src = document.getElementById('url-input').value;
 		}
 
-		function installApp(id, title, icon, url) {
-			parent.minimizeApp()
-			setTimeout(() => {
-				parent.openApp("sys.hos.appcenter", "App Center", "assets/apps/app-center/assets/icons/icon.png", "assets/apps/app-center/index.html", {id: id, title: title, icon: icon, url: url});
-			}, 300);
+		window.addEventListener('message', (event) => {
+  			console.log('Received message from iframe:', event.data);
+			installApp(event.data);
+		});
+
+		function installApp(manifest_url) {
+			fetch(manifest_url)
+        		.then(response => response.json())
+        		.then(data => {
+        		    console.log(data);
+				
+        		    parent.minimizeApp()
+        		    setTimeout(() => {
+        		        parent.openApp("sys.hos.appcenter", "App Center", "assets/apps/app-center/assets/icons/icon.png", "assets/apps/app-center/index.html", {id: data["app_id"], title: data["app_name"], icon: data["app_icon"], url: data["app_url"], author: data["app_author"], screenshots: data["screenshots"]});
+        		    }, 300);
+        		})
+        		.catch(error => console.error('Error:', error));
 		}
 
 		function refresh() {
