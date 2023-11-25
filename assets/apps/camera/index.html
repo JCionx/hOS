@@ -132,7 +132,7 @@
 
                             // Remove the image element
                             this.parentNode.removeChild(this);
-                        }.bind(this), 1000); // 1000ms = 1s
+                        }.bind(this), 700); // 1000ms = 1s
                     });
                     img.addEventListener('mouseup', function() {
                         // Cancel the timer
@@ -234,7 +234,7 @@
         height: auto;
         margin: 8px;
         border-radius: 10px;
-        transition: 1s;
+        transition: 0.7s;
     }
 
     .images img:active {
