@@ -171,9 +171,11 @@ function installApp(app_id, app_title, app_icon, app_url, refresh) {
 		installed_apps_title.push(app_title);
 		installed_apps_icon.push(app_icon);
 		installed_apps_url.push(app_url);
-		if (!refresh) {
+		if (!refresh && app_id) {
 			saveInstalledApps();
-			toast("App installed");
+			if (!app_id.startsWith("sys.hos.")) {
+				toast("App installed");
+			}
 		}
 		let default_install = document.getElementById("installed-app");
 		let cloned_install = default_install.cloneNode(true);
