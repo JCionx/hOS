@@ -233,10 +233,20 @@ function toast(text, duration) {
 	}
 	document.getElementById("toast").style.display = "flex";
 	document.getElementById("toast-text").innerHTML = text;
+	document.getElementById("toast-box").classList.add("showToastAnimation");
 	setTimeout(() => {
-		document.getElementById("toast").style.display = "none";
+		document.getElementById("toast-box").classList.remove("showToastAnimation");
+	}, 300);
+	setTimeout(() => {
+		document.getElementById("toast-box").classList.add("hideToastAnimation");
+		setTimeout(() => {
+			document.getElementById("toast-box").classList.remove("hideToastAnimation");
+			document.getElementById("toast").style.display = "none";
+		}, 300);
 	}, toast_duration)
 }
+
+
 function updateTime() {
 	let date = new Date();
 	let hours = date.getHours();

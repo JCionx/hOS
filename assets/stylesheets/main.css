@@ -66,12 +66,12 @@ body::backdrop {
 	bottom: 0;
 	left: 0;
 	z-index: 99999999;
-	height: 65px;
+	height: 55px;
 }
 
 .navigation-bar img {
-	height: 3vh;
-	padding: 2vh;
+	height: 25px;
+	padding: 15px;
 	transition: 0.1s;
 }
 
@@ -274,6 +274,40 @@ body::backdrop {
 	flex-wrap: wrap;
 }
 
+@keyframes toastShow {
+	from {
+		width: 0px;
+		color: rgba(255, 255, 255, 0);
+	}
+	to {
+		width: 90%;
+		color: rgb(255, 255, 255, 1);
+	}
+}
+
+@keyframes toastHide {
+	from {
+		width: 90%;
+		color: rgb(255, 255, 255, 1);
+	}
+	to {
+		width: 0px;
+		color: rgba(255, 255, 255, 0);
+	}
+}
+
+.showToastAnimation {
+	animation-name: toastShow;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+}
+
+.hideToastAnimation {
+	animation-name: toastHide;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+}
+
 .toast {
 	background-color: transparent;
 	color: white;
@@ -284,7 +318,7 @@ body::backdrop {
 	justify-content: center;
 	align-items: center;
 	position: absolute;
-	bottom: 60px;
+	bottom: 70px;
 	z-index: 999999999999;
 }
 
@@ -292,6 +326,8 @@ body::backdrop {
 	background-color: rgba(0, 0, 0, 0.6);
 	padding: 5px 10px 5px 10px;
 	border-radius: 50px;
+	text-align: center;
+	width: 90%;
 }
 
 #toast {
