@@ -6,9 +6,13 @@
 <body>
     <video class="camera-preview" id="camera-preview" autoplay></video>
     <div class="toolbar">
-        <img id="switch-button" src="assets/icons/switch-camera.png"></img>
-        <img id="capture-button" src="assets/icons/capture.png"></img>
-        <img id="record-button" src="assets/icons/record.png"></img>
+        <img src="assets/icons/gallery.png" onclick="showCapturedImages()" class="gallery"></img>
+        <img id="capture-button" src="assets/icons/capture.png" class="capture"></img>
+        <img id="switch-button" src="assets/icons/switch-camera.png" class="switch"></img>
+    </div>
+    <div class="images" id="images">
+        <h2 style="color: white; margin: 10px 0 0 10px;">Galery</h2>
+        <span style="color: gray; margin: 0 0 10px 10px;">Long click an image to delete it</span>
     </div>
     
     <p id="timer"></p>
@@ -42,8 +46,7 @@
                     console.error('Error accessing the camera:', error);
                 });
         }
-
-        // Capture button click event handler
+        
         var captureButton = document.getElementById('capture-button');
         captureButton.addEventListener('click', function () {
             if (!isRecording) {
@@ -53,20 +56,40 @@
                 canvas.height = videoElement.videoHeight;
                 var context = canvas.getContext('2d');
                 context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-
+            
                 // Convert the canvas image to a data URL (PNG format)
                 var dataUrl = canvas.toDataURL('image/png');
+            
+                // Convert data URL to Blob
+                var byteString = atob(dataUrl.split(',')[1]);
+                var mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0]
+                var ab = new ArrayBuffer(byteString.length);
+                var ia = new Uint8Array(ab);
+                for (var i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                var blob = new Blob([ab], {type: mimeString});
+            
+                // Convert Blob to base64
+                var reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = function() {
+                    var base64data = reader.result;
 
-                // Generate the filename with datetime
-                var datetime = new Date().toISOString().replace(/:/g, '-');
-                var filename = 'photo_' + datetime + '.png';
+                    // Get existing images from localStorage
+                    var existingImages = localStorage.getItem('capturedImages');
+                    if (existingImages) {
+                        // If there are existing images, append the new image data
+                        existingImages += '|' + base64data;
+                    } else {
+                        // If there are no existing images, just save the new image data
+                        existingImages = base64data;
+                    }
 
-                // Create a temporary link element to download the image
-                var link = document.createElement('a');
-                link.href = dataUrl;
-                link.download = filename;
-                link.click();
-                parent.toast("Image downloaded");
+                    // Save to localStorage
+                    localStorage.setItem('capturedImages', existingImages);
+                    console.log(localStorage.getItem('capturedImages'));
+                }
             }
         });
 
@@ -82,82 +105,46 @@
             startCamera();
         });
 
-        // Record button click event handler
-        var recordButton = document.getElementById('record-button');
-        recordButton.addEventListener('click', function () {
-            if (isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
-        });
+        function showCapturedImages() {
+            var images = localStorage.getItem('capturedImages');
+            if (images) {
+                images = images.split('|');
+                for (var i = 0; i < images.length; i++) {
+                    var img = document.createElement('img');
+                    img.src = images[i];
+                    img.id = 'image' + i; // Assign a unique ID to each image
 
-        function startRecording() {
-            var videoElement = document.getElementById('camera-preview');
+                    // Add event listener for long press
+                    var pressTimer;
+                    img.addEventListener('mousedown', function() {
+                        // Start the timer
+                        pressTimer = window.setTimeout(function() {
+                            // Delete the image from localStorage
+                            var imageId = parseInt(this.id.replace('image', ''));
+                            images.splice(imageId, 1);
+                            localStorage.setItem('capturedImages', images.join('|'));
 
-            // Check if MediaRecorder is supported
-            if (typeof MediaRecorder === 'undefined') {
-                alert('MediaRecorder is not supported in your browser.');
-                return;
-            }
-
-            // Start the recording
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: currentCamera }, audio: true })
-                .then(function (stream) {
-                    mediaRecorder = new MediaRecorder(stream);
-
-                    mediaRecorder.addEventListener('dataavailable', function (event) {
-                        chunks.push(event.data);
+                            // Remove the image element
+                            this.parentNode.removeChild(this);
+                        }.bind(this), 1000); // 1000ms = 1s
                     });
-
-                    mediaRecorder.addEventListener('stop', function () {
-                        var blob = new Blob(chunks, { type: 'video/mp4' });
-
-                        // Generate the filename with datetime
-                        var datetime = new Date().toISOString().replace(/:/g, '-');
-                        var filename = 'record_' + datetime + '.mp4';
-
-                        // Create a temporary link element to download the recording
-                        var link = document.createElement('a');
-                        link.href = URL.createObjectURL(blob);
-                        link.download = filename;
-                        link.click();
-                        parent.toast("Video downloaded");
-
-                        chunks = [];
+                    img.addEventListener('mouseup', function() {
+                        // Cancel the timer
+                        clearTimeout(pressTimer);
                     });
-
-                    startTime = new Date().getTime();
-                    timerInterval = setInterval(updateTimer, 1000);
-                    isRecording = true;
-                    recordButton.src = 'assets/icons/stop-recording.png';
-
-                    mediaRecorder.start();
-                })
-                .catch(function (error) {
-                    console.error('Error accessing the camera and microphone:', error);
-                });
-        }
-
-        function stopRecording() {
-            if (mediaRecorder && isRecording) {
-                mediaRecorder.stop();
-                clearInterval(timerInterval);
-                isRecording = false;
-                recordButton.src = 'assets/icons/record.png';
+                    
+                    document.getElementById('images').appendChild(img);
+                }
             }
+            document.getElementById('images').style.display = 'block';
         }
 
-        function updateTimer() {
-            var currentTime = new Date().getTime();
-            var elapsedTime = Math.floor((currentTime - startTime) / 1000);
-            var minutes = Math.floor(elapsedTime / 60);
-            var seconds = elapsedTime % 60;
-            var timerElement = document.getElementById('timer');
-            timerElement.textContent = 'Recording: ' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
-        }
 
         parent.document.getElementById("navigation-bar-back").addEventListener("click", function() {
+            if (document.getElementById('images').style.display == 'block') {
+                document.getElementById('images').style.display = 'none';
+                return;
+            }
             parent.closeApp();
         })
         
@@ -166,31 +153,114 @@
     </script>
 </body>
 <style>
+    @font-face {
+		font-family: 'Roboto';
+		src: url("../../fonts/Roboto-Regular.ttf") format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src: url("../../fonts/Roboto-Italic.ttf") format('truetype');
+		font-weight: normal;
+		font-style: italic;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src: url("../../fonts/Roboto-Bold.ttf") format('truetype');
+		font-weight: bold;
+		font-style: normal;
+	}
+
+	@font-face {
+		font-family: 'Roboto';
+		src: url("../../fonts/Roboto-BoldItalic.ttf") format('truetype');
+		font-weight: bold;
+		font-style: italic;
+	}
+
     body {
         margin: 0;
         overflow: hidden;
-        background-color: white;
+        background-color: black;
+        font-family: 'Roboto';
     }
     
     .camera-preview {
-        height: 100vh;
+        height: calc(100vh - 105px);
         width: 100vw;
         object-fit: cover;
+        border-radius: 0 0 20px 20px;
     }
     
     .toolbar {
         display: flex;
         position: absolute;
-        bottom: 5px;
+        padding: 10px 0;
+        bottom: 0;
         left: 0;
         width: 100%;
         justify-content: space-evenly;
+        background-color: black;
     }
     
     .toolbar img {
-        border-radius: 70px;
-        background-color: white;
         padding: 5px;
+        width: 75px;
+    }
+
+    .images {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: black;
+        overflow: auto;
+        z-index: 999;
+    }
+
+    .images img {
+        width: calc(100% - 16px);
+        height: auto;
+        margin: 8px;
+        border-radius: 10px;
+        transition: 1s;
+    }
+
+    .images img:active {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    .capture {
+        transition: 0.2s;
+    }
+
+    .capture:active {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+
+    .switch {
+        transition: 0.2s;
+    }
+
+    .switch:active {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+
+    .gallery {
+        transition: 0.2s;
+    }
+
+    .gallery:active {
+        transform: scale(0.8);
+        opacity: 0.5;
     }
 </style>
 </html>
