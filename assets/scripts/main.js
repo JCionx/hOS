@@ -45,40 +45,50 @@ function saveInstalledApps() {
 
 function openApp(app_id, app_title, app_icon, app_url, app_arg) {
 	closePanel();
-	minimizeApp();
-	if (open_apps.includes(app_id)) {
-		// show app
-		current_app = app_id;
-		document.getElementById(app_id + "_app").style.display = "block";
-		document.getElementById(current_app + "_app").classList.add("openAppAnimation");
-		setTimeout(() => {
-			document.getElementById(current_app + "_app").classList.remove("openAppAnimation");
-		}, 300);
+	if (current_app == app_id) {
+		console.log("App already open");
 	} else {
-		// start app
-		open_apps.push(app_id);
-		current_app = app_id;
-		let default_app = document.getElementById("app");
-		let cloned_app = default_app.cloneNode(true);
-		cloned_app.setAttribute("id", app_id + "_app");
-		let url = app_url;
-		if ((app_arg != null) && (app_arg != '')) {
-			url += "?";
-			for (let key in app_arg) {
-				if (app_arg.hasOwnProperty(key)) {
-					url += key + '=' + encodeURIComponent(app_arg[key]) + '&';
+		if (current_app != "") {
+			minimizeApp();
+			setTimeout(() => {
+				openApp(app_id, app_title, app_icon, app_url, app_arg);
+			}, 300);
+		} else {
+			if (open_apps.includes(app_id)) {
+				// show app
+				current_app = app_id;
+				document.getElementById(app_id + "_app").style.display = "block";
+				document.getElementById(current_app + "_app").classList.add("openAppAnimation");
+				setTimeout(() => {
+					document.getElementById(current_app + "_app").classList.remove("openAppAnimation");
+				}, 300);
+			} else {
+				// start app
+				open_apps.push(app_id);
+				current_app = app_id;
+				let default_app = document.getElementById("app");
+				let cloned_app = default_app.cloneNode(true);
+				cloned_app.setAttribute("id", app_id + "_app");
+				let url = app_url;
+				if ((app_arg != null) && (app_arg != '')) {
+					url += "?";
+					for (let key in app_arg) {
+						if (app_arg.hasOwnProperty(key)) {
+							url += key + '=' + encodeURIComponent(app_arg[key]) + '&';
+						}
+					}
+					url = url.slice(0, -1);
 				}
+				console.log(url);
+				cloned_app.setAttribute("src", url);
+				document.body.appendChild(cloned_app);
+				addToRecents(app_id, app_title, app_icon, app_url);
+				cloned_app.classList.add("openAppAnimation");
+				setTimeout(() => {
+					cloned_app.classList.remove("openAppAnimation");
+				}, 300);
 			}
-			url = url.slice(0, -1);
 		}
-		console.log(url);
-		cloned_app.setAttribute("src", url);
-		document.body.appendChild(cloned_app);
-		addToRecents(app_id, app_title, app_icon, app_url);
-		cloned_app.classList.add("openAppAnimation");
-		setTimeout(() => {
-			cloned_app.classList.remove("openAppAnimation");
-		}, 300);
 	}
 }
 

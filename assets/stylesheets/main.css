@@ -96,12 +96,13 @@ body::backdrop {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	width: 42%;
+	width: calc(42% - 15px);
 	padding: 2%;
+	height: 40px;
 	margin: 2%;
 	border-radius: 20px;
 	color: black;
-	transition: 0.1s;
+	transition: 0.2s;
 }
 
 .recent-app img {
@@ -113,7 +114,7 @@ body::backdrop {
 	font-size: large;
 }
 
-.recent-app:hover {
+.recent-app:active {
 	background-color: black;
 	color: white;
 }
@@ -263,7 +264,7 @@ body::backdrop {
 	width: 48px;
 }
 
-.control-panel-entry:hover img {
+.control-panel-entry:active img {
 	filter: invert(100%);
 }
 
