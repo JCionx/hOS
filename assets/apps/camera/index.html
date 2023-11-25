@@ -87,7 +87,13 @@
                     }
 
                     // Save to localStorage
-                    localStorage.setItem('capturedImages', existingImages);
+                    
+                    try {
+                        localStorage.setItem('capturedImages', existingImages);
+                    } catch (e) {
+                        parent.toast('Storage full.');
+                    }
+                    
                     console.log(localStorage.getItem('capturedImages'));
                 }
             }
