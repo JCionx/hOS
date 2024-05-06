@@ -367,15 +367,19 @@ function turnOffFlashlight() {
     track.applyConstraints({
       advanced: [{torch: false}]
     });
-	flash_on = false;
+	flash_on = false;	
   }
 }
 
 function toggleFlashlight() {
 	if (track) {
 		if (flash_on) {
+			document.getElementById("flash-toggle").style.backgroundColor = "var(--toggle-color)";
+			document.getElementById("flash-toggle").querySelector("img").src = "assets/icons/flashlight-off.png";
 	  		turnOffFlashlight();
 		} else {
+			document.getElementById("flash-toggle").style.backgroundColor = "var(--toggle-color-active)";
+			document.getElementById("flash-toggle").querySelector("img").src = "assets/icons/flashlight-on.png";
 	  		turnOnFlashlight();
 		}
   	}

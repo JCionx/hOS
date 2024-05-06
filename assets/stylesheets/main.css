@@ -26,6 +26,11 @@
 	font-style: italic;
 }
 
+:root {
+	--toggle-color: rgb(87, 87, 87);
+	--toggle-color-active: rgb(155, 155, 155);
+}
+
 body {
 	margin: 0;
 	overflow: hidden;
