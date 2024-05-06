@@ -19,25 +19,27 @@
 		</div>
 	</div>
 	<div class="control-panel" id="control-panel">
-		<h2>Control panel:</h2>
-		<div class="control-panel-toggles">
-			<div class="control-panel-entry" onclick="document.body.requestFullscreen()">
-				<img src="assets/icons/fullscreen.png">
-				<span>Fullscreen</span>
-			</div>
-			<div class="control-panel-entry" onclick="installApp('com.test.app2', 'Test app 2', 'assets/apps/test2/icon.png', 'assets/apps/test2/index.html')">
-				<img src="assets/icons/test-app.png">
-				<span>Install test app 2</span>
-			</div>
-		</div>
-		<h2>Recent apps:</h2>
-		<div class="recent-apps" id="recent-apps">
-			<div class="recent-app" id="recent-app">
-				<div id="recent-open-area" onclick="" style="display: flex; flex-direction: row; align-items: center; height: 100%; width: 100%;">
-					<img src="" id="recent-app-icon">
-					<span id="recent-app-text">Text</span>
+		<div class="control-panel-elements">
+			<h2>Control panel:</h2>
+			<div class="control-panel-toggles">
+				<div class="control-panel-entry" onclick="document.body.requestFullscreen()">
+					<img src="assets/icons/fullscreen.png">
+					<span>Fullscreen</span>
 				</div>
-				<img src="assets/icons/recent-app-close.png" id="close-app-icon" onclick="">
+				<div class="control-panel-entry" onclick="toggleFlashlight()">
+					<img src="assets/icons/test-app.png">
+					<span>Flashlight</span>
+				</div>
+			</div>
+			<h2>Recent apps:</h2>
+			<div class="recent-apps" id="recent-apps">
+				<div class="recent-app" id="recent-app">
+					<div id="recent-open-area" onclick="" style="display: flex; flex-direction: row; align-items: center; height: 100%; width: 100%;">
+						<img src="" id="recent-app-icon">
+						<span id="recent-app-text">Text</span>
+					</div>
+					<img src="assets/icons/recent-app-close.png" id="close-app-icon" onclick="">
+				</div>
 			</div>
 		</div>
 	</div>

@@ -11,9 +11,12 @@
 		<img src="assets/icons/go.png" onclick="go()">
 		<img src="assets/icons/refresh.png" onclick="refresh()">
 	</div>
-	<iframe class="webpage" id="webpage" src="https://google.gprivate.com/" frameborder="0"></iframe>
+	<iframe class="webpage" id="webpage" src="	" frameborder="0"></iframe>
 	<script>
+		let homepage = "https://google.gprivate.com/";
 		let iframe = document.getElementById('webpage');
+		
+		iframe.src = homepage;
 
 		function go() {
 			iframe.src = document.getElementById('url-input').value;
@@ -29,8 +32,6 @@
         		.then(response => response.json())
         		.then(data => {
         		    console.log(data);
-				
-        		    parent.minimizeApp()
         		    setTimeout(() => {
         		        parent.openApp("sys.hos.appcenter", "App Center", "assets/apps/app-center/assets/icons/icon.png", "assets/apps/app-center/index.html", {id: data["app_id"], title: data["app_name"], icon: data["app_icon"], url: data["app_url"], author: data["app_author"], screenshots: data["screenshots"]});
         		    }, 300);
@@ -41,6 +42,10 @@
 		function refresh() {
 			iframe.src = iframe.src;
 		}
+
+		parent.document.getElementById("navigation-bar-back").addEventListener("click", function() {
+            iframe.src = homepage;
+        })
 	</script>
 </body>
 <style type="text/css">

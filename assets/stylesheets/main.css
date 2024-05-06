@@ -95,14 +95,18 @@ body::backdrop {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: center;
-	width: calc(42% - 15px);
-	padding: 2%;
+	width: calc(50% - 60px);
+	padding: 20px;
+	margin: 10px;
 	height: 40px;
-	margin: 2%;
 	border-radius: 20px;
 	color: white;
 	transition: 0.2s;
+}
+
+#close-app-icon {
+	width: 40px;
+	height: 40px;
 }
 
 .recent-app img {
@@ -165,13 +169,13 @@ body::backdrop {
 }
 
 @keyframes openMenu {
-	0%   {left: 100%;}
-	100% {left: 0;}
+	0%   {top: 100%}
+	100% {top: 0;}
 }
 
 @keyframes closeMenu {
-	0%   {left: 0;}
-	100% {left: 100%;}
+	0%   {top: 0%;}
+	100% {top: 100%;}
 }
 
 @keyframes openApp {
@@ -200,17 +204,43 @@ body::backdrop {
 	}
 }
 
+@keyframes switchAppFrom {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: -100%;
+	}
+}
+
+@keyframes switchAppTo {
+	0% {
+		left: 100%;
+	}
+	100% {
+		left: 0;
+	}
+}
+
 .control-panel {
 	position: absolute;
 	top: 0;
 	left: 0;
-	background-color: rgb(37, 37, 37);
+	background-color: transparent;
 	z-index: 999;
 	width: 100%;
 	height: 100vh;
-	padding: 15px;
 	display: none;
 	color: rgb(184, 184, 184);
+	flex-direction: column;
+	justify-content: flex-end;
+}
+
+.control-panel-elements {
+	background-color: rgb(37, 37, 37);
+	padding: 15px;
+	margin-bottom: 55px;
+	border-radius: 15px 15px 0 0;
 }
 
 .openMenuAnimation {
@@ -237,15 +267,27 @@ body::backdrop {
 	animation-fill-mode: forwards;
 }
 
+.switchFromAppAnimation {
+	animation-name: switchAppFrom;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+}
+
+.switchToAppAnimation {
+	animation-name: switchAppTo;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+}
+
 .control-panel-entry {
 	background-color: rgb(87, 87, 87);
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
-	width: calc(42% - 15px);
-	padding: 2%;
-	margin: 2%;
+	width: calc(50% - 60px);
+	padding: 20px;
+	margin: 10px;
 	border-radius: 20px;
 	color: white;
 	transition: 0.2s;

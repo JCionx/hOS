@@ -43,69 +43,114 @@ function saveInstalledApps() {
 	localStorage.setItem("installed_url", installed_apps_url);
 }
 
-function openApp(app_id, app_title, app_icon, app_url, app_arg) {
+function openApp(app_id, app_title, app_icon, app_url, app_arg, switching = false) {
 	closePanel();
 	if (current_app == app_id) {
 		console.log("App already open");
 	} else {
 		if (current_app != "") {
-			minimizeApp();
-			setTimeout(() => {
-				openApp(app_id, app_title, app_icon, app_url, app_arg);
-			}, 300);
+			minimizeApp(true);
+			openApp(app_id, app_title, app_icon, app_url, app_arg, true);
 		} else {
-			if (open_apps.includes(app_id)) {
-				// show app
-				current_app = app_id;
-				document.getElementById(app_id + "_app").style.display = "block";
-				document.getElementById(current_app + "_app").classList.add("openAppAnimation");
-				setTimeout(() => {
-					document.getElementById(current_app + "_app").classList.remove("openAppAnimation");
-				}, 300);
-			} else {
-				// start app
-				open_apps.push(app_id);
-				current_app = app_id;
-				let default_app = document.getElementById("app");
-				let cloned_app = default_app.cloneNode(true);
-				cloned_app.setAttribute("id", app_id + "_app");
-				let url = app_url;
-				if ((app_arg != null) && (app_arg != '')) {
-					url += "?";
-					for (let key in app_arg) {
-						if (app_arg.hasOwnProperty(key)) {
-							url += key + '=' + encodeURIComponent(app_arg[key]) + '&';
+			if (switching) {
+				if (open_apps.includes(app_id)) {
+					// show app
+					current_app = app_id;
+					document.getElementById(app_id + "_app").style.display = "block";
+					document.getElementById(current_app + "_app").classList.add("switchToAppAnimation");
+					setTimeout(() => {
+						document.getElementById(current_app + "_app").classList.remove("switchToAppAnimation");
+					}, 300);
+				} else {
+					// start app
+					open_apps.push(app_id);
+					current_app = app_id;
+					let default_app = document.getElementById("app");
+					let cloned_app = default_app.cloneNode(true);
+					cloned_app.setAttribute("id", app_id + "_app");
+					let url = app_url;
+					if ((app_arg != null) && (app_arg != '')) {
+						url += "?";
+						for (let key in app_arg) {
+							if (app_arg.hasOwnProperty(key)) {
+								url += key + '=' + encodeURIComponent(app_arg[key]) + '&';
+							}
 						}
+						url = url.slice(0, -1);
 					}
-					url = url.slice(0, -1);
+					console.log(url);
+					cloned_app.setAttribute("src", url);
+					document.body.appendChild(cloned_app);
+					addToRecents(app_id, app_title, app_icon, app_url);
+					cloned_app.classList.add("switchToAppAnimation");
+					setTimeout(() => {
+						cloned_app.classList.remove("switchToAppAnimation");
+					}, 300);
 				}
-				console.log(url);
-				cloned_app.setAttribute("src", url);
-				document.body.appendChild(cloned_app);
-				addToRecents(app_id, app_title, app_icon, app_url);
-				cloned_app.classList.add("openAppAnimation");
-				setTimeout(() => {
-					cloned_app.classList.remove("openAppAnimation");
-				}, 300);
+			} else {
+				if (open_apps.includes(app_id)) {
+					// show app
+					current_app = app_id;
+					document.getElementById(app_id + "_app").style.display = "block";
+					document.getElementById(current_app + "_app").classList.add("openAppAnimation");
+					setTimeout(() => {
+						document.getElementById(current_app + "_app").classList.remove("openAppAnimation");
+					}, 300);
+				} else {
+					// start app
+					open_apps.push(app_id);
+					current_app = app_id;
+					let default_app = document.getElementById("app");
+					let cloned_app = default_app.cloneNode(true);
+					cloned_app.setAttribute("id", app_id + "_app");
+					let url = app_url;
+					if ((app_arg != null) && (app_arg != '')) {
+						url += "?";
+						for (let key in app_arg) {
+							if (app_arg.hasOwnProperty(key)) {
+								url += key + '=' + encodeURIComponent(app_arg[key]) + '&';
+							}
+						}
+						url = url.slice(0, -1);
+					}
+					console.log(url);
+					cloned_app.setAttribute("src", url);
+					document.body.appendChild(cloned_app);
+					addToRecents(app_id, app_title, app_icon, app_url);
+					cloned_app.classList.add("openAppAnimation");
+					setTimeout(() => {
+						cloned_app.classList.remove("openAppAnimation");
+					}, 300);
+				}
 			}
+			
 		}
 	}
 }
 
-function minimizeApp() {
-	if (controlPanelOpen) {
-		closePanel();
-	}
-	if (current_app == "") {
-		console.log("No app is open");
-	} else {
-		document.getElementById(current_app + "_app").classList.add("closeAppAnimation");
+function minimizeApp(switching = false) {
+	closePanel();
+	if (switching) {
+		document.getElementById(current_app + "_app").classList.add("switchFromAppAnimation");
+		let tmp_app = current_app
+		current_app = "";
 		setTimeout(() => {
-			document.getElementById(current_app + "_app").classList.remove("closeAppAnimation");
-			document.getElementById(current_app + "_app").style.display = "none";
-			current_app = "";
+			document.getElementById(tmp_app + "_app").classList.remove("switchFromAppAnimation");
+			document.getElementById(tmp_app + "_app").style.display = "none";
 		}, 300);
+	} else {
+		if (current_app == "") {
+			console.log("No app is open");
+		} else {
+			document.getElementById(current_app + "_app").classList.add("closeAppAnimation");
+			setTimeout(() => {
+				document.getElementById(current_app + "_app").classList.remove("closeAppAnimation");
+				document.getElementById(current_app + "_app").style.display = "none";
+				current_app = "";
+			}, 300);
+		}
 	}
+	
 }
 
 function closeApp(app_id) {
@@ -203,7 +248,7 @@ function uninstallApp(app_id) {
 }
 
 function openPanel() {
-	document.getElementById("control-panel").style.display = "block";
+	document.getElementById("control-panel").style.display = "flex";
 	document.getElementById("control-panel").classList.add("openMenuAnimation");
 	setTimeout(() => {
 		document.getElementById("control-panel").classList.remove("openMenuAnimation");
@@ -268,6 +313,69 @@ function checkAppInstalled(app_id) {
 	} else {
 		return false;
 	}
+}
+
+//Test browser support
+const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
+
+let track = null;
+
+if (SUPPORTS_MEDIA_DEVICES) {
+  //Get the environment camera (usually the second one)
+  navigator.mediaDevices.enumerateDevices().then(devices => {
+  
+    const cameras = devices.filter((device) => device.kind === 'videoinput');
+
+    if (cameras.length === 0) {
+      throw 'No camera found on this device.';
+    }
+    const camera = cameras[cameras.length - 1];
+
+    // Create stream and get video track
+    navigator.mediaDevices.getUserMedia({
+      video: {
+        deviceId: camera.deviceId,
+        facingMode: ['user', 'environment'],
+        height: {ideal: 1080},
+        width: {ideal: 1920}
+      }
+    }).then(stream => {
+      track = stream.getVideoTracks()[0];
+
+      //Create image capture object and get camera capabilities
+      const imageCapture = new ImageCapture(track)
+      const photoCapabilities = imageCapture.getPhotoCapabilities().then(() => {
+
+        //todo: check if camera has a torch
+      });
+    });
+  });
+}
+
+function turnOnFlashlight() {
+  if (track) {
+    track.applyConstraints({
+      advanced: [{torch: true}]
+    });
+  }
+}
+
+function turnOffFlashlight() {
+  if (track) {
+    track.applyConstraints({
+      advanced: [{torch: false}]
+    });
+  }
+}
+
+function toggleFlashlight() {
+	if (track) {
+		if (track.getConstraints().advanced[0].torch) {
+	  		turnOffFlashlight();
+		} else {
+	  		turnOnFlashlight();
+		}
+  	}
 }
 
 updateTime();
