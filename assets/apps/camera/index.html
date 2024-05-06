@@ -13,6 +13,7 @@
     <div class="images" id="images">
         <h2 style="color: white; margin: 10px 0 0 10px;">Galery</h2>
         <span style="color: gray; margin: 0 0 10px 10px;">Long click an image to delete it</span>
+        <div class="group-images" id="group-images"></div>images
     </div>
     
     <p id="timer"></p>
@@ -139,7 +140,7 @@
                         clearTimeout(pressTimer);
                     });
                     
-                    document.getElementById('images').appendChild(img);
+                    document.getElementById('group-images').appendChild(img);
                 }
             }
             document.getElementById('images').style.display = 'block';
@@ -267,6 +268,19 @@
     .gallery:active {
         transform: scale(0.8);
         opacity: 0.5;
+    }
+
+    .group-images {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: start;
+        justify-content: center;
+    }
+
+    .group-images img {
+        width: 20vw;
+        margin: 10px;
     }
 </style>
 </html>
