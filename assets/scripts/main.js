@@ -319,6 +319,7 @@ function checkAppInstalled(app_id) {
 const SUPPORTS_MEDIA_DEVICES = 'mediaDevices' in navigator;
 
 let track = null;
+let flash_on = false;
 
 if (SUPPORTS_MEDIA_DEVICES) {
   //Get the environment camera (usually the second one)
@@ -357,6 +358,7 @@ function turnOnFlashlight() {
     track.applyConstraints({
       advanced: [{torch: true}]
     });
+	flash_on = true;
   }
 }
 
@@ -365,12 +367,13 @@ function turnOffFlashlight() {
     track.applyConstraints({
       advanced: [{torch: false}]
     });
+	flash_on = false;
   }
 }
 
 function toggleFlashlight() {
 	if (track) {
-		if (track.getConstraints().advanced[0].torch) {
+		if (flash_on) {
 	  		turnOffFlashlight();
 		} else {
 	  		turnOnFlashlight();
